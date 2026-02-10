@@ -1,4 +1,5 @@
 from torch.utils.data import DataLoader
+from matplotlib.figure import Figure
 from torchvision import transforms
 from matplotlib.axes import Axes
 import torch.nn as tnn
@@ -25,3 +26,4 @@ type HasilPrediksi = Tensor|int|float
 type PrediksiMax = Dict[str, HasilPrediksi]
 type UIGradio = gr.Interface
 type MatplotAxes = Axes
+type MatplotFigure = Figure

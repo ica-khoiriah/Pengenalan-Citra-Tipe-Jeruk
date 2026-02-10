@@ -1,4 +1,5 @@
 from local_const import EKSTENSI_IMGFIG
+from plotting_utils import simpan_figur
 from dataclasses import dataclass
 import matplotlib.pyplot as plt
 from pathlib import Path
@@ -6,6 +7,8 @@ from local_type import (
     Plottingan,
     MatplotAxes,
 )
+
+
 
 @dataclass
 class BahanPlottingan:
@@ -43,7 +46,7 @@ def tampilkan_plot_akur_loss(bahan_plottingan_model: BahanPlottinganModel, simpa
     fig.canvas.manager.set_window_title("Plottingan Loss dan Akur")
 
     if simpan is not None:
-        fig.savefig(simpan.with_suffix(f".{EKSTENSI_IMGFIG}"))
+        simpan_figur(fig, simpan.stem)
 
     plt.tight_layout()
     plt.show()
