@@ -1,17 +1,22 @@
-from predict import prediksi_softmax_gr, set_model
 from model_utils import muat_model
 from model import ModelCNNJeruk
+from local_type import UIGradio
+from functools import partial
 from pathlib import Path
 import gradio as gr
+from predict import (
+    prediksi_softmax
+)
 
-def ready() -> gr.Interface:
+def ready(path_model: Path) -> UIGradio:
     model = ModelCNNJeruk(jumlah_klasifikasi=2)
-    muat_model(model, Path("./model/model-09_02_26_v2_13.pth"))
-    set_model(model)
-    model.eval()
+
+    muat_model(model, path_model)
+
+    fungsi_prediksi = partial(prediksi_softmax, model)
 
     app = gr.Interface(
-        fn=prediksi_softmax_gr,
+        fn=fungsi_prediksi,
         inputs=gr.Image(type='pil'),
         outputs=gr.Label(num_top_classes=2)
     )

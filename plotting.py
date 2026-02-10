@@ -1,50 +1,49 @@
-from local_type import DaftarPlottingan
+from local_const import EKSTENSI_IMGFIG
 from dataclasses import dataclass
 import matplotlib.pyplot as plt
+from pathlib import Path
+from local_type import (
+    Plottingan,
+    MatplotAxes,
+)
+
+@dataclass
+class BahanPlottingan:
+    latihan: Plottingan
+    validasi: Plottingan
 
 @dataclass
 class BahanPlottinganModel:
-    akurasi_latihan: DaftarPlottingan
-    akurasi_validasi: DaftarPlottingan
-    loss_latihan: DaftarPlottingan
-    loss_validasi: DaftarPlottingan
+    plottingan_akurasi: Plottingan
+    plottingan_loss: Plottingan
 
-__bahan_plottingan_model: BahanPlottinganModel | None = None
+def plot_loss(ax: MatplotAxes, plotting_loss: BahanPlottingan):
+    ax.plot(plotting_loss.latihan, label="Loss Latih")
+    ax.plot(plotting_loss.validasi, label="Loss Validasi")
+    ax.set_title("Loss")
+    ax.set_label("Epoch")
+    ax.set_ylabel("Loss")
+    ax.legend()
 
-def siapkan_plottingan(bahan_plottingan_model: BahanPlottinganModel):
-    global __bahan_plottingan_model
-    __bahan_plottingan_model = bahan_plottingan_model
 
-def __siapkan_figure():
-    plt.figure()
+def plot_akurasi(ax: MatplotAxes, plotting_akurasi: BahanPlottingan):
+    ax.plot(plotting_akurasi.latihan, label="Loss Latih")
+    ax.plot(plotting_akurasi.validasi, label="Loss Validasi")
+    ax.set_title("Akurasi")
+    ax.set_label("Epoch")
+    ax.set_ylabel("Akurasi")
+    ax.legend()
+
+def tampilkan_plot_akur_loss(bahan_plottingan_model: BahanPlottinganModel, simpan: Path | None = None):
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
+
+    plot_akurasi(ax2, bahan_plottingan_model.plottingan_akurasi)
+    plot_loss(ax1, bahan_plottingan_model.plottingan_loss)
+
+    fig.canvas.manager.set_window_title("Plottingan Loss dan Akur")
+
+    if simpan is not None:
+        fig.savefig(simpan.with_suffix(f".{EKSTENSI_IMGFIG}"))
+
     plt.tight_layout()
-
-def plotting_loss(figure_sama: bool = True):
-    if not figure_sama:
-        plt.figure()
-    plt.plot(__bahan_plottingan_model.loss_latihan, label="Loss Latihan")
-    plt.plot(__bahan_plottingan_model.loss_validasi, label="Loss Validasi")
-    plt.xlabel("Epoch")
-    plt.ylabel("Loss")
-    plt.legend()
-    plt.title("Loss setiap Epoch")
-    if not figure_sama:
-        plt.show()
-
-def plotting_latihan(figure_sama: bool = True):
-    if not figure_sama:
-        plt.figure()
-    plt.plot(__bahan_plottingan_model.akurasi_latihan, label="Akurasi Latihan")
-    plt.plot(__bahan_plottingan_model.akurasi_validasi, label="Akurasi Validasi")
-    plt.xlabel("Epoch")
-    plt.ylabel("Akurasi")
-    plt.legend()
-    plt.title("Akurasi setiap Epoch")
-    if not figure_sama:
-        plt.show()
-
-def plotting_loss_dan_latih():
-    __siapkan_figure()
-    plotting_latihan()
-    plotting_loss()
     plt.show()

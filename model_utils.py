@@ -1,20 +1,26 @@
-from torchvision import datasets, transforms
+from model_transforms import ModelTransform
 from torch.utils.data import DataLoader
-from dataclasses import dataclass
-from typing import Tuple
+from torchvision import datasets
 from pathlib import Path
-import torch.nn as tnn
+from typing import Tuple
 import torch
-
-@dataclass(frozen=True)
-class PerangkatTrainingModel:
-    CUDA: str = "cuda"
-    GPU: str = "cuda"
-    CPU: str = "cpu"
-
-type NamaPerangkat = str
-type DataLoaderLatih = DataLoader
-type DataLoaderValidasi = DataLoader
+from utils import (
+    pembuat_nama_model,
+    pembuat_file,
+)
+from local_const import (
+    PerangkatTrainingModel,
+    FOLDER_TRAINING,
+    FOLDER_VALIDASI,
+    FOLDER_MODEL,
+    EKSTENSI_MODEL,
+)
+from local_type import (
+    DataLoaderValidasi,
+    DataLoaderLatih,
+    NamaPerangkat,
+    Model,
+)
 
 def perangkat_pilihan() -> NamaPerangkat:
     return (
@@ -24,29 +30,14 @@ def perangkat_pilihan() -> NamaPerangkat:
     )
 
 def muat_dataset() -> Tuple[DataLoaderLatih, DataLoaderValidasi]:
-    # data-nya di augmentasikan
-    transformasi_data_latih = transforms.Compose([
-        transforms.Resize((32, 32)),
-        transforms.RandomHorizontalFlip(),
-        transforms.RandomRotation(15),
-        transforms.RandomResizedCrop(32, scale=(.8, 1.0)),
-        transforms.ColorJitter(brightness=.2, contrast=.2),
-        transforms.ToTensor(),
-    ])
-
-    transformasi_data = transforms.Compose([
-        transforms.Resize((32, 32)),
-        transforms.ToTensor(),
-    ])
-
     kumpulan_data_latih = datasets.ImageFolder(
-        root="./dataset/train",
-        transform=transformasi_data_latih
+        root=FOLDER_TRAINING,
+        transform=ModelTransform.transform_latih
     )
 
     kumpulan_data_validasi = datasets.ImageFolder(
-        root="./dataset/val",
-        transform=transformasi_data
+        root=FOLDER_VALIDASI,
+        transform=ModelTransform.transform_validasi
     )
 
     pemuat_data_latih = DataLoader(
@@ -63,9 +54,28 @@ def muat_dataset() -> Tuple[DataLoaderLatih, DataLoaderValidasi]:
 
     return pemuat_data_latih, pemuat_data_validasi
 
-def simpan_model(model: tnn.Module, nama: str = "model", ekstensi: str = "pth"):
-    torch.save(model.state_dict(), Path("./model/") / Path(f"{nama}.{ekstensi}"))
+def simpan_model(
+        model: Model,
+        nama_model: str | None = None,
+        ekstensi: str = EKSTENSI_MODEL
+    ) -> Path:
+    nama_model = (
+        pembuat_nama_model()
+        if nama_model is None
+        else nama_model
+    )
+    nama_file = pembuat_file(nama_model, ekstensi)
+    torch.save(
+        model.state_dict(),
+        FOLDER_MODEL / nama_file
+    )
+    return nama_file
 
-def muat_model(model: tnn.Module, path_citra: Path):
-    model.load_state_dict(torch.load(path_citra, map_location=perangkat_pilihan()))
+def muat_model(model: Model, path_citra: Path):
+    model.load_state_dict(
+        torch.load(
+            path_citra,
+            map_location=perangkat_pilihan()
+        )
+    )
     return model

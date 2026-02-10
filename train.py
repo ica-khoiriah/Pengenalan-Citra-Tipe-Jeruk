@@ -1,29 +1,41 @@
-from model_utils import simpan_model, perangkat_pilihan
 from torch.utils.data import DataLoader
-from local_type import DaftarPlottingan
-from dataclasses import dataclass
-from typing import Tuple, Final
 import torch.optim as toptim
+from pathlib import Path
 import torch.nn as tnn
+from tqdm import tqdm
 import torch
+from typing import (
+    Tuple,
+    Final
+)
+from model_utils import (
+    simpan_model,
+    perangkat_pilihan
+)
+from local_type import (
+    Plottingan,
+    Model,
+)
 
-JUMLAH_EPOCH: Final[int] = 10 # 10 epoch biar cukup
-
-@dataclass
-class SimpanModul:
-    nama: str
-    ekstensi: str = "pth"
+JUMLAH_EPOCH: Final[int] = 10                                   # 10: default - biar cukup.
 
 def latih_model(
-        model: tnn.Module,
+        model: Model,
         pemuat_latih: DataLoader,
         pemuat_validasi: DataLoader,
-        simpan: SimpanModul | None = None
+        simpan: bool = True,
+        jumlah_epoch: int | None = None
     ) -> Tuple[
-        DaftarPlottingan,
-        DaftarPlottingan,
-        DaftarPlottingan,
-        DaftarPlottingan
+        Plottingan,
+        Plottingan,
+        Plottingan,
+        Plottingan,
+    ] | Tuple[
+        Plottingan,
+        Plottingan,
+        Plottingan,
+        Plottingan,
+        Path
     ]:
     perangkat_latih = torch.device(perangkat_pilihan())
 
@@ -36,15 +48,20 @@ def latih_model(
     daftar_akurasi_latih = []
     daftar_akurasi_validasi = []
 
-    for epoch in range(JUMLAH_EPOCH):
+    if jumlah_epoch is None:
+        jumlah_epoch = JUMLAH_EPOCH
+
+    for epoch in range(jumlah_epoch):
         model.train()
         kumpulan_latihan_loss = .0
         kumpulan_validasi_loss = .0
         benar = 0
         total = 0
 
+        loop = tqdm(pemuat_latih, desc=f"Epoch {epoch + 1}/{jumlah_epoch} [Latih]")
+
         # latihan
-        for gambar, label in pemuat_latih:
+        for gambar, label in loop:
             gambar = gambar.to(perangkat_latih)
             label = label.to(perangkat_latih)
 
@@ -60,6 +77,14 @@ def latih_model(
             _, prediksi = torch.max(output, 1)
             total += label.size(0)
             benar += (prediksi == label).sum().item()
+
+            akurasi = 100.0 * benar / total
+            rata2_loss = kumpulan_latihan_loss / total
+
+            loop.set_postfix({
+                "loss": f"{rata2_loss:.4f}",
+                "akur": f"{akurasi:.2f}%" 
+            })
         
         akurasi_latih = 100 * benar / total
         loss_latih = kumpulan_latihan_loss / len(pemuat_latih)
@@ -73,7 +98,9 @@ def latih_model(
 
         # validasi
         with torch.no_grad():
-            for gambar, label in pemuat_validasi:
+            loop = tqdm(pemuat_latih, desc=f"Epoch {epoch + 1}/{jumlah_epoch} [Valid]")
+
+            for gambar, label in loop:
                 gambar = gambar.to(perangkat_latih)
                 label = label.to(perangkat_latih)
 
@@ -86,28 +113,39 @@ def latih_model(
                 total_validasi += label.size(0)
                 benar_validasi += (prediksi == label).sum().item()
 
+                akurasi = 100.0 * benar / total
+                rata2_loss = kumpulan_validasi_loss / total
+
+                loop.set_postfix({
+                    "loss": f"{rata2_loss:.4f}",
+                    "akur": f"{akurasi:.2f}%" 
+                })
+
         akurasi_validasi = 100 * benar_validasi / total_validasi
         loss_latih = kumpulan_validasi_loss / len(pemuat_validasi)
 
         daftar_akurasi_validasi.append(akurasi_validasi)
         daftar_loss_validasi.append(loss_latih)
 
-        print(f"Epoch [{epoch+1}/{JUMLAH_EPOCH}] "
-              f"Loss: {loss_latih:.2f} ",
-              f"Akurasi: {akurasi_latih:.2f}% "
-              f"Akurasi Validasi: {akurasi_validasi:.2f}%"
-        )
+        # print(f"Epoch [{epoch+1}/{jumlah_epoch}] "
+        #       f"Loss: {loss_latih:.2f} ",
+        #       f"Akurasi: {akurasi_latih:.2f}% "
+        #       f"Akurasi Validasi: {akurasi_validasi:.2f}%"
+        # )
 
-    if simpan is not None:
-        simpan_model(
-            model,
-            simpan.nama,
-            simpan.ekstensi
+    if simpan:
+        nama_model = simpan_model(model)
+        return (
+            tuple(daftar_akurasi_latih),
+            tuple(daftar_akurasi_validasi),
+            tuple(daftar_loss_latih),
+            tuple(daftar_loss_validasi),
+            nama_model
         )
-
-    return (
-        tuple(daftar_akurasi_latih),
-        tuple(daftar_akurasi_validasi),
-        tuple(daftar_loss_latih),
-        tuple(daftar_loss_validasi)
-    )
+    else:
+        return (
+            tuple(daftar_akurasi_latih),
+            tuple(daftar_akurasi_validasi),
+            tuple(daftar_loss_latih),
+            tuple(daftar_loss_validasi)
+        )
