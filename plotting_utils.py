@@ -1,10 +1,25 @@
-from local_const import EKSTENSI_IMGFIG
+from local_const import (
+    EKSTENSI_IMGFIG,
+    FOLDER_FIGUR
+)
 from local_type import MatplotFigure
+from dataclasses import dataclass
+from local_type import Plottingan
 from pathlib import Path
 from utils import (
     pembuat_nama_model,
     pembuat_file
 )
+
+@dataclass
+class BahanPlottingan:
+    latihan: Plottingan
+    validasi: Plottingan
+
+@dataclass
+class BahanPlottinganModel:
+    plottingan_akurasi: Plottingan
+    plottingan_loss: Plottingan
 
 def simpan_figur(
         figur: MatplotFigure,
@@ -17,4 +32,4 @@ def simpan_figur(
         else nama_figur
     )
     nama_file = pembuat_file(nama_figur, ekstensi)
-    figur.savefig(nama_file)
+    figur.savefig(FOLDER_FIGUR / nama_file)

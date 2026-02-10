@@ -1,24 +1,13 @@
-from local_const import EKSTENSI_IMGFIG
 from plotting_utils import simpan_figur
-from dataclasses import dataclass
 import matplotlib.pyplot as plt
 from pathlib import Path
+from plotting_utils import (
+    BahanPlottinganModel,
+    BahanPlottingan,
+)
 from local_type import (
-    Plottingan,
     MatplotAxes,
 )
-
-
-
-@dataclass
-class BahanPlottingan:
-    latihan: Plottingan
-    validasi: Plottingan
-
-@dataclass
-class BahanPlottinganModel:
-    plottingan_akurasi: Plottingan
-    plottingan_loss: Plottingan
 
 def plot_loss(ax: MatplotAxes, plotting_loss: BahanPlottingan):
     ax.plot(plotting_loss.latihan, label="Loss Latih")

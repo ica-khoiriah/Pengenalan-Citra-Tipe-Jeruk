@@ -47,11 +47,7 @@ if __name__ == "__main__":
             model = ModelCNNJeruk(2)                                
             dataset_latih, dataset_validasi = muat_dataset()        
             
-            (daftar_akur_latih,
-             daftar_akur_valid,
-             daftar_loss_latih,
-             daftar_loss_valid,
-             nama_model) = latih_model(                     
+            hasil_latih = latih_model(                     
                 model=model,
                 pemuat_latih=dataset_latih,
                 pemuat_validasi=dataset_validasi,
@@ -59,20 +55,10 @@ if __name__ == "__main__":
                 jumlah_epoch=jumlah_epoch
             )
 
-            plot_loss = BahanPlottingan(
-                latihan=daftar_loss_latih,
-                validasi=daftar_loss_valid,
+            tampilkan_plot_akur_loss(
+                hasil_latih.bahan_plottingan_model,
+                hasil_latih.nama_model
             )
-            plot_akur = BahanPlottingan(
-                latihan=daftar_akur_latih,
-                validasi=daftar_akur_valid,
-            )
-            bahan_plottingan_model = BahanPlottinganModel(          
-                plottingan_akurasi=plot_akur,
-                plottingan_loss=plot_loss,
-            )
-
-            tampilkan_plot_akur_loss(bahan_plottingan_model, nama_model)
         case "aplikasi" | "app" | "a":
             path: Path | None = None
             if len(args) >= 1:

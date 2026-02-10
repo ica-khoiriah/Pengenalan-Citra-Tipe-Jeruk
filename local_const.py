@@ -6,9 +6,12 @@ from typing import (
 )
 
 TRANSFORM_SIZE: Final[int] = 64
+JUMLAH_EPOCH: Final[int] = 10                                   # 10: default - biar cukup.
+TDQM_BAR_FORMAT: Final[str] = "{l_bar}{bar} [{elapsed}<{remaining} {postfix}]"
 EKSTENSI_MODEL: Final[str] = "pth"
 EKSTENSI_IMGFIG: Final[str] = "png"
 FOLDER_MODEL: Final[Path] = Path("./model/")
+FOLDER_FIGUR: Final[Path] = Path("./model_figure/")
 FOLDER_DATASET: Final[Path] = Path("./dataset/")
 FOLDER_TRAINING: Final[Path] = FOLDER_DATASET / "train"
 FOLDER_VALIDASI: Final[Path] = FOLDER_DATASET / "val"

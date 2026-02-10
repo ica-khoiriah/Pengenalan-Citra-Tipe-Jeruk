@@ -1,23 +1,27 @@
 from torch.utils.data import DataLoader
+from dataclasses import dataclass
 import torch.optim as toptim
-from pathlib import Path
+from local_type import Model
 import torch.nn as tnn
 from tqdm import tqdm
 import torch
-from typing import (
-    Tuple,
-    Final
-)
 from model_utils import (
-    simpan_model,
-    perangkat_pilihan
+    perangkat_pilihan,
+    simpan_model
 )
-from local_type import (
-    Plottingan,
-    Model,
+from local_const import (
+    TDQM_BAR_FORMAT,
+    JUMLAH_EPOCH,
+)
+from plotting_utils import (
+    BahanPlottinganModel,
+    BahanPlottingan
 )
 
-JUMLAH_EPOCH: Final[int] = 10                                   # 10: default - biar cukup.
+@dataclass
+class HasilLatih:
+    bahan_plottingan_model: BahanPlottinganModel
+    nama_model: str | None = None
 
 def latih_model(
         model: Model,
@@ -25,18 +29,7 @@ def latih_model(
         pemuat_validasi: DataLoader,
         simpan: bool = True,
         jumlah_epoch: int | None = None
-    ) -> Tuple[
-        Plottingan,
-        Plottingan,
-        Plottingan,
-        Plottingan,
-    ] | Tuple[
-        Plottingan,
-        Plottingan,
-        Plottingan,
-        Plottingan,
-        Path
-    ]:
+    ) -> HasilLatih:
     perangkat_latih = torch.device(perangkat_pilihan())
 
     model = model.to(perangkat_latih)
@@ -58,7 +51,11 @@ def latih_model(
         benar = 0
         total = 0
 
-        loop = tqdm(pemuat_latih, desc=f"Epoch {epoch + 1}/{jumlah_epoch} [Latih]")
+        loop = tqdm(
+            pemuat_latih,
+            desc=f"Epoch {epoch + 1}/{jumlah_epoch} [Latih]",
+            bar_format=TDQM_BAR_FORMAT
+        )
 
         # latihan
         for gambar, label in loop:
@@ -98,7 +95,11 @@ def latih_model(
 
         # validasi
         with torch.no_grad():
-            loop = tqdm(pemuat_latih, desc=f"Epoch {epoch + 1}/{jumlah_epoch} [Valid]")
+            loop = tqdm(
+                pemuat_latih,
+                desc=f"Epoch {epoch + 1}/{jumlah_epoch} [Valid]",
+                bar_format=TDQM_BAR_FORMAT
+            )
 
             for gambar, label in loop:
                 gambar = gambar.to(perangkat_latih)
@@ -133,19 +134,41 @@ def latih_model(
         #       f"Akurasi Validasi: {akurasi_validasi:.2f}%"
         # )
 
-    if simpan:
-        nama_model = simpan_model(model)
-        return (
-            tuple(daftar_akurasi_latih),
-            tuple(daftar_akurasi_validasi),
-            tuple(daftar_loss_latih),
-            tuple(daftar_loss_validasi),
-            nama_model
-        )
-    else:
-        return (
-            tuple(daftar_akurasi_latih),
-            tuple(daftar_akurasi_validasi),
-            tuple(daftar_loss_latih),
-            tuple(daftar_loss_validasi)
-        )
+    nama_model = (
+        simpan_model(model)
+        if simpan
+        else None
+    )
+
+    hasil_latih = HasilLatih(
+        bahan_plottingan_model=BahanPlottinganModel(
+            plottingan_akurasi=BahanPlottingan(
+                latihan=daftar_akurasi_latih,
+                validasi=daftar_akurasi_validasi
+            ),
+            plottingan_loss=BahanPlottingan(
+                latihan=daftar_loss_latih,
+                validasi=daftar_loss_validasi
+            )
+        ),
+        nama_model=nama_model
+    )
+
+    return hasil_latih
+
+    # if simpan:
+    #     nama_model = simpan_model(model)
+    #     return (
+    #         tuple(daftar_akurasi_latih),
+    #         tuple(daftar_akurasi_validasi),
+    #         tuple(daftar_loss_latih),
+    #         tuple(daftar_loss_validasi),
+    #         nama_model
+    #     )
+    # else:
+    #     return (
+    #         tuple(daftar_akurasi_latih),
+    #         tuple(daftar_akurasi_validasi),
+    #         tuple(daftar_loss_latih),
+    #         tuple(daftar_loss_validasi)
+    #     )
