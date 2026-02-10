@@ -4,6 +4,7 @@ from torchvision import transforms
 from matplotlib.axes import Axes
 import torch.nn as tnn
 import gradio as gr
+from numpy import ndarray
 import torch
 from typing import (
     TypedDict,
@@ -18,6 +19,7 @@ class PrediksiSoftmax(TypedDict):
 type Plottingan = Tuple[float]
 type TipeCompose = transforms.Compose
 type NamaPerangkat = str
+type KonfusiMatrix = ndarray
 type DataLoaderLatih = DataLoader
 type DataLoaderValidasi = DataLoader
 type Model = tnn.Module

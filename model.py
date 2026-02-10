@@ -7,6 +7,7 @@ class ModelCNNJeruk(tnn.Module):
 
         self.conv_kernel_size = 3
         self.conv_padding = 1
+        self.jumlah_klasifikasi = jumlah_klasifikasi
 
         # siapkan layer ReLU: aktivasi layer
         self.relu = tnn.ReLU()

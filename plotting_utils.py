@@ -17,9 +17,15 @@ class BahanPlottingan:
     validasi: Plottingan
 
 @dataclass
+class BahanPlottinganMatriksKonfusi:
+    prediksi: Plottingan
+    label: Plottingan
+
+@dataclass
 class BahanPlottinganModel:
-    plottingan_akurasi: Plottingan
-    plottingan_loss: Plottingan
+    plottingan_akurasi: BahanPlottingan
+    plottingan_loss: BahanPlottingan
+    plottingan_prediksi: BahanPlottinganMatriksKonfusi
 
 def simpan_figur(
         figur: MatplotFigure,

@@ -11,6 +11,7 @@ if __name__ == "__main__":
              """))
         exit(0)
 
+    from confmatrix import kalkulasi_konfusi_matrix
     from model_utils import muat_dataset
     from utils import ambil_file_terbaru
     from model import ModelCNNJeruk
@@ -18,9 +19,9 @@ if __name__ == "__main__":
     from app import ready
     from local_const import FOLDER_MODEL
     from plotting import (
-        BahanPlottinganModel,
-        BahanPlottingan,
+        tampilkan_plot_konfusi_matrix,
         tampilkan_plot_akur_loss,
+        tampilkan_plot
     )
     _, command, *args = sys.argv
 
@@ -55,10 +56,22 @@ if __name__ == "__main__":
                 jumlah_epoch=jumlah_epoch
             )
 
+            # cm(hasil_latih.bahan_plottingan_model.plottingan_prediksi)
+            hasil_konfusi_matriks = kalkulasi_konfusi_matrix(
+                hasil_latih
+                .bahan_plottingan_model
+                .plottingan_prediksi
+            )
+
             tampilkan_plot_akur_loss(
                 hasil_latih.bahan_plottingan_model,
                 hasil_latih.nama_model
             )
+            tampilkan_plot_konfusi_matrix(
+                hasil_konfusi_matriks,
+                hasil_latih.nama_model
+            )
+            tampilkan_plot()
         case "aplikasi" | "app" | "a":
             path: Path | None = None
             if len(args) >= 1:

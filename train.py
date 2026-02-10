@@ -14,6 +14,7 @@ from local_const import (
     JUMLAH_EPOCH,
 )
 from plotting_utils import (
+    BahanPlottinganMatriksKonfusi,
     BahanPlottinganModel,
     BahanPlottingan
 )
@@ -53,7 +54,7 @@ def latih_model(
 
         loop = tqdm(
             pemuat_latih,
-            desc=f"Epoch {epoch + 1}/{jumlah_epoch} [Latih]",
+            desc=f"Epoch {epoch + 1:02}/{jumlah_epoch} [Latih]",
             bar_format=TDQM_BAR_FORMAT
         )
 
@@ -92,12 +93,14 @@ def latih_model(
         model.eval()
         benar_validasi = 0
         total_validasi = 0
+        semua_prediksi = []
+        semua_label = []
 
         # validasi
         with torch.no_grad():
             loop = tqdm(
                 pemuat_latih,
-                desc=f"Epoch {epoch + 1}/{jumlah_epoch} [Valid]",
+                desc=f"Epoch {epoch + 1:02}/{jumlah_epoch} [Valid]",
                 bar_format=TDQM_BAR_FORMAT
             )
 
@@ -116,6 +119,9 @@ def latih_model(
 
                 akurasi = 100.0 * benar / total
                 rata2_loss = kumpulan_validasi_loss / total
+
+                semua_prediksi.extend(prediksi.cpu().numpy())
+                semua_label.extend(label.cpu().numpy())
 
                 loop.set_postfix({
                     "loss": f"{rata2_loss:.4f}",
@@ -149,26 +155,13 @@ def latih_model(
             plottingan_loss=BahanPlottingan(
                 latihan=daftar_loss_latih,
                 validasi=daftar_loss_validasi
+            ),
+            plottingan_prediksi=BahanPlottinganMatriksKonfusi(
+                prediksi=semua_prediksi,
+                label=semua_label
             )
         ),
         nama_model=nama_model
     )
 
     return hasil_latih
-
-    # if simpan:
-    #     nama_model = simpan_model(model)
-    #     return (
-    #         tuple(daftar_akurasi_latih),
-    #         tuple(daftar_akurasi_validasi),
-    #         tuple(daftar_loss_latih),
-    #         tuple(daftar_loss_validasi),
-    #         nama_model
-    #     )
-    # else:
-    #     return (
-    #         tuple(daftar_akurasi_latih),
-    #         tuple(daftar_akurasi_validasi),
-    #         tuple(daftar_loss_latih),
-    #         tuple(daftar_loss_validasi)
-    #     )
