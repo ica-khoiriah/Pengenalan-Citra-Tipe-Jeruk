@@ -38,4 +38,8 @@ def simpan_figur(
         else nama_figur
     )
     nama_file = pembuat_file(nama_figur, ekstensi)
-    figur.savefig(FOLDER_FIGUR / nama_file)
+    figur.savefig(
+        FOLDER_FIGUR / nama_file,
+        dpi=300,
+        bbox_inches="tight"
+    )

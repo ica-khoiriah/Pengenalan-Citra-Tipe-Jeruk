@@ -8,8 +8,9 @@ from plotting_utils import (
     BahanPlottingan,
 )
 from local_type import (
-    MatplotAxes,
-    KonfusiMatrix
+    LaporanKonfusiMatrix,
+    KonfusiMatrix,
+    MatplotAxes
 )
 
 def plot_loss(ax: MatplotAxes, plotting_loss: BahanPlottingan):
@@ -20,10 +21,9 @@ def plot_loss(ax: MatplotAxes, plotting_loss: BahanPlottingan):
     ax.set_ylabel("Loss")
     ax.legend()
 
-
 def plot_akurasi(ax: MatplotAxes, plotting_akurasi: BahanPlottingan):
-    ax.plot(plotting_akurasi.latihan, label="Loss Latih")
-    ax.plot(plotting_akurasi.validasi, label="Loss Validasi")
+    ax.plot(plotting_akurasi.latihan, label="Akurasi Latih")
+    ax.plot(plotting_akurasi.validasi, label="Akurasi Validasi")
     ax.set_title("Akurasi")
     ax.set_label("Epoch")
     ax.set_ylabel("Akurasi")

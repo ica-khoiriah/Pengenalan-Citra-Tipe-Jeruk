@@ -6,8 +6,9 @@ from typing import (
 )
 
 TRANSFORM_SIZE: Final[int] = 64
-JUMLAH_EPOCH: Final[int] = 10                                   # 10: default - biar cukup.
+JUMLAH_EPOCH: Final[int] = 10                                                       # 10: default - biar cukup.
 TDQM_BAR_FORMAT: Final[str] = "{l_bar}{bar} [{elapsed}<{remaining} {postfix}]"
+TDQM_BAR_STYLE: Final[str] = " ░▒█"
 EKSTENSI_MODEL: Final[str] = "pth"
 EKSTENSI_IMGFIG: Final[str] = "png"
 FOLDER_MODEL: Final[Path] = Path("./model/")

@@ -2,9 +2,10 @@ from torch.utils.data import DataLoader
 from matplotlib.figure import Figure
 from torchvision import transforms
 from matplotlib.axes import Axes
+from pandas import DataFrame
+from numpy import ndarray
 import torch.nn as tnn
 import gradio as gr
-from numpy import ndarray
 import torch
 from typing import (
     TypedDict,
@@ -20,6 +21,7 @@ type Plottingan = Tuple[float]
 type TipeCompose = transforms.Compose
 type NamaPerangkat = str
 type KonfusiMatrix = ndarray
+type LaporanKonfusiMatrix = DataFrame
 type DataLoaderLatih = DataLoader
 type DataLoaderValidasi = DataLoader
 type Model = tnn.Module

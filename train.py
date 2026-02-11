@@ -11,6 +11,7 @@ from model_utils import (
 )
 from local_const import (
     TDQM_BAR_FORMAT,
+    TDQM_BAR_STYLE,
     JUMLAH_EPOCH,
 )
 from plotting_utils import (
@@ -55,7 +56,8 @@ def latih_model(
         loop = tqdm(
             pemuat_latih,
             desc=f"Epoch {epoch + 1:02}/{jumlah_epoch} [Latih]",
-            bar_format=TDQM_BAR_FORMAT
+            bar_format=TDQM_BAR_FORMAT,
+            ascii=TDQM_BAR_STYLE
         )
 
         # latihan
@@ -99,9 +101,10 @@ def latih_model(
         # validasi
         with torch.no_grad():
             loop = tqdm(
-                pemuat_latih,
+                pemuat_validasi,
                 desc=f"Epoch {epoch + 1:02}/{jumlah_epoch} [Valid]",
-                bar_format=TDQM_BAR_FORMAT
+                bar_format=TDQM_BAR_FORMAT,
+                ascii=TDQM_BAR_STYLE[::-1]
             )
 
             for gambar, label in loop:

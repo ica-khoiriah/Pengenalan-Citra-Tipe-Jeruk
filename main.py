@@ -56,7 +56,6 @@ if __name__ == "__main__":
                 jumlah_epoch=jumlah_epoch
             )
 
-            # cm(hasil_latih.bahan_plottingan_model.plottingan_prediksi)
             hasil_konfusi_matriks = kalkulasi_konfusi_matrix(
                 hasil_latih
                 .bahan_plottingan_model
