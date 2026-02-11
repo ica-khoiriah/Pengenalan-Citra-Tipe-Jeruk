@@ -1,13 +1,14 @@
+from textwrap import dedent
 from pathlib import Path
-import textwrap
 import sys
 
 if __name__ == "__main__":
     if len(sys.argv) <= 1:
-        print(textwrap.dedent("""\
+        print(dedent("""\
             Tidak ada yang bisa dilakukan -- Ketik Perintah:
             \t[t]rain\t\t- untuk melatih data.
             \t[a]pp\t\t- untuk menampilkan UI web.
+            \t[h]elp\t\t- untuk menampilkan pesan bantu.
              """))
         exit(0)
 
@@ -41,6 +42,9 @@ if __name__ == "__main__":
                             jumlah_epoch = 10
                         else:
                             jumlah_epoch = int(jumlah_epoch)
+                    case "?":
+                        print("\tpython main.py train epoch <jumlah_epoch:int>")
+                        exit(0)
                     case _:
                         print("Perintah Salah. [epoch]")
                         exit(1)
@@ -82,16 +86,31 @@ if __name__ == "__main__":
                             print("Tidak ada yang bisa di muat.")
 
                             path, *args = args
-                            if path == "newest" or path == "terbaru":
+                            if path == "newest" or path == "terbaru" or path == "default":
                                 path = ambil_file_terbaru(FOLDER_MODEL)
                             else:
                                 path = Path(path)
+                    case "?":
+                        print("\tpython main.py app load <path_file:str>")
+                        exit(0)
                     case _:
                         print("Perintah Salah. [load]")
             if path is None:
                 path = ambil_file_terbaru(FOLDER_MODEL)
             app = ready(path)
-            app.launch()
+            app()
+        case "help" | "h" | "?":
+            print(dedent("""
+            Perintah yang bisa dijalankan:
+            \t[t]rain\t\t- untuk melatih model. subperintah opsional:
+            \t epoch <int>\t- untuk menspesifikasikan jumlah epoch. [default] 10.
+            \n
+            \t[a]pp\t\t- untuk menampilkan GUI model pada Web. subperintah opsional:
+            \t load <path>\t- untuk menspesifikasikan model yang akan dipakai. [default] model terbaru.
+            \n
+            \t[h]elp\t\t- untuk menampilkan pesan bantu seperti ini.
+            """))
+            exit(0)
         case _:
             print("Perintah Salah. [train, app]")
             exit(1)
