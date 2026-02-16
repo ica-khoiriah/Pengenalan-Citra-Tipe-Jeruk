@@ -1,0 +1,14 @@
+# folder
+__pycache__/
+.gradio/
+archieve/
+data_tes/
+dataset/
+koleksi_dataset/
+model_figure/
+venv/
+
+# file
+# .gitignore
+contoh.py
+activate.ps1
