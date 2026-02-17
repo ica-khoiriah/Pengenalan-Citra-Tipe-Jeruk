@@ -23,14 +23,14 @@ def prediksi_softmax(model: Model, citra: Image) -> PrediksiSoftmax:
         output = model(citra_siap)
         hasil = torch.softmax(output, 1)
 
-    # return {
-    #     KLASIFIKASI_NAMA_JERUK[0].title(): hasil[0][0],
-    #     KLASIFIKASI_NAMA_JERUK[1].title(): hasil[0][1],
-    # }
     return {
-        KLASIFIKASI_NAMA_JERUK[i].title(): hasil[i].items()
-        for i in range(len(hasil))
+        KLASIFIKASI_NAMA_JERUK[0].title(): hasil[0][0],
+        KLASIFIKASI_NAMA_JERUK[1].title(): hasil[0][1],
     }
+    # return {
+    #     KLASIFIKASI_NAMA_JERUK[i].title(): hasil[i].item()
+    #     for i in range(len(hasil))
+    # }
 
 def prediksi_max(model: Model, citra: Image) -> PrediksiMax:
     citra_siap = ModelTransform.transform_validasi(citra)
@@ -43,16 +43,17 @@ def prediksi_max(model: Model, citra: Image) -> PrediksiMax:
 
     with torch.no_grad():
         output = model(citra_siap)
-        nilai, potongan = torch.max(output, 1)
+        # nilai, potongan = torch.max(output, 1)
+        hasil = torch.max(output, 1)
 
-    nama_kelas = potongan.item()
-    persentase_prediksi = nilai.item()
-
-    return {
-        KLASIFIKASI_NAMA_JERUK[nama_kelas].title(): persentase_prediksi
-    }
+    # nama_kelas = potongan.item()
+    # persentase_prediksi = nilai.item()
 
     # return {
-    #     KLASIFIKASI_NAMA_JERUK[hasil.item()[1]].title(): hasil.item()[0],
+    #     KLASIFIKASI_NAMA_JERUK[nama_kelas].title(): persentase_prediksi
     # }
+
+    return {
+        KLASIFIKASI_NAMA_JERUK[hasil.item()[1]].title(): hasil.item()[0],
+    }
 
