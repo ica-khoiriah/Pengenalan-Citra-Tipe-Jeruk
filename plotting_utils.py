@@ -27,6 +27,12 @@ class BahanPlottinganModel:
     plottingan_loss: BahanPlottingan
     plottingan_prediksi: BahanPlottinganMatriksKonfusi
 
+@dataclass
+class BahanPlottinganData:
+    plottingan_akurasi: Plottingan
+    plottingan_loss: Plottingan
+    plottingan_prediksi: BahanPlottinganMatriksKonfusi
+
 def simpan_figur(
         figur: MatplotFigure,
         nama_figur: str | None = None,

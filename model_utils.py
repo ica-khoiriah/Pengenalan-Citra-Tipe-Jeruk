@@ -4,6 +4,11 @@ from torchvision import datasets
 from pathlib import Path
 from typing import Tuple
 import torch
+from dataclasses import dataclass
+from plotting_utils import (
+    BahanPlottinganModel,
+    BahanPlottinganData,
+)
 from utils import (
     pembuat_nama_model,
     pembuat_file,
@@ -22,6 +27,16 @@ from local_type import (
     NamaPerangkat,
     Model,
 )
+
+@dataclass
+class HasilLatih:
+    bahan_plottingan_model: BahanPlottinganModel
+    nama_model: str | None = None
+
+@dataclass
+class HasilPrediksi:
+    bahan_plottingan_data: BahanPlottinganData
+    nama_prediksi: str | None = None
 
 def perangkat_pilihan() -> NamaPerangkat:
     return (

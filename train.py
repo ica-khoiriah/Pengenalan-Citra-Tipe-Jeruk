@@ -1,4 +1,3 @@
-from torch.utils.data import DataLoader
 from dataclasses import dataclass
 import torch.optim as toptim
 from local_type import (
@@ -10,6 +9,7 @@ import torch.nn as tnn
 from tqdm import tqdm
 import torch
 from model_utils import (
+    HasilLatih,
     perangkat_pilihan,
     simpan_model
 )
@@ -23,11 +23,6 @@ from plotting_utils import (
     BahanPlottinganModel,
     BahanPlottingan
 )
-
-@dataclass
-class HasilLatih:
-    bahan_plottingan_model: BahanPlottinganModel
-    nama_model: str | None = None
 
 def latih_model(
         model: Model,
@@ -136,10 +131,10 @@ def latih_model(
                 })
 
         akurasi_validasi = 100 * benar_validasi / total_validasi
-        loss_latih = kumpulan_validasi_loss / len(pemuat_validasi)
+        loss_validasi = kumpulan_validasi_loss / len(pemuat_validasi)
 
         daftar_akurasi_validasi.append(akurasi_validasi)
-        daftar_loss_validasi.append(loss_latih)
+        daftar_loss_validasi.append(loss_validasi)
 
         # print(f"Epoch [{epoch+1}/{jumlah_epoch}] "
         #       f"Loss: {loss_latih:.2f} ",

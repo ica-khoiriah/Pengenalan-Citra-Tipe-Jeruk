@@ -16,6 +16,7 @@ FOLDER_FIGUR: Final[Path] = Path("./model_figure/")
 FOLDER_DATASET: Final[Path] = Path("./dataset/")
 FOLDER_TRAINING: Final[Path] = FOLDER_DATASET / "train"
 FOLDER_VALIDASI: Final[Path] = FOLDER_DATASET / "val"
+FOLDER_TEST: Final[Path] = FOLDER_DATASET / "test"
 KLASIFIKASI_NAMA_JERUK: Final[Dict[int, str]] = {
     0: "gerga",
     1: "kalamansi"
