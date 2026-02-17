@@ -73,9 +73,6 @@ def prediksi_banyak(
             daftar_loss.append(akurasi_data)
             daftar_akur.append(loss_data)
 
-    print(f"{daftar_loss = }\n{daftar_akur = }")
-    # exit(1)
-
     hasil_predik = HasilPrediksi(
         bahan_plottingan_data=BahanPlottinganData(
             plottingan_akurasi=daftar_akur,
