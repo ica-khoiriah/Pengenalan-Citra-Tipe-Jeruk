@@ -182,6 +182,9 @@ if __name__ == "__main__":
             \t[a]pp\t\t- untuk menampilkan GUI model pada Web. subperintah opsional:
             \t load <path>\t- untuk menspesifikasikan model yang akan dipakai. [default] model terbaru.
             \n
+            \tt[e]st <path>\t- untuk menguji pada sekumpulan citra. subperintah wajib:
+            \t load <path>\t- untuk menspesifikasikan model yang akan dipakai. [default] model terbaru.
+            \n
             \t[h]elp\t\t- untuk menampilkan pesan bantu seperti ini.
             """))
             exit(0)
