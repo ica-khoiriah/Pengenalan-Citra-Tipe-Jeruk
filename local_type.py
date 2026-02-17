@@ -5,9 +5,11 @@ from matplotlib.axes import Axes
 from pandas import DataFrame
 from numpy import ndarray
 import torch.nn as tnn
+from PIL import Image
 import gradio as gr
 import torch
 from typing import (
+    Iterable,
     TypedDict,
     Tuple,
     Dict,
@@ -31,3 +33,5 @@ type PrediksiMax = Dict[str, HasilPrediksi]
 type UIGradio = gr.Interface
 type MatplotAxes = Axes
 type MatplotFigure = Figure
+type KontenFolder = Iterable
+type KumpulanCitra = Tuple[Image.Image]

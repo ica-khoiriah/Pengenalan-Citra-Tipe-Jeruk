@@ -14,11 +14,11 @@ if __name__ == "__main__":
 
     from confmatrix import kalkulasi_konfusi_matrix
     from model_utils import muat_dataset
-    from utils import ambil_file_terbaru
     from model import ModelCNNJeruk
     from train import latih_model
     from app import ready
     from local_const import FOLDER_MODEL
+    from utils import ambil_file_terbaru
     from plotting import (
         tampilkan_plot_konfusi_matrix,
         tampilkan_plot_akur_loss,
@@ -95,10 +95,25 @@ if __name__ == "__main__":
                         exit(0)
                     case _:
                         print("Perintah Salah. [load]")
+                        exit(1)
             if path is None:
                 path = ambil_file_terbaru(FOLDER_MODEL)
             app = ready(path)
             app()
+        case "test" | "uji" | "u" | "@":
+            path: Path | None = None
+
+            if len(args) >= 1:
+                path, *args = args
+                path = Path(path)
+
+                if path.is_file():
+                    print("Path bukan folder.")
+                    exit(1)
+
+            if path is None:
+                print("Path ke folder tidak ada.")
+                exit(1)
         case "help" | "h" | "?":
             print(dedent("""
             Perintah yang bisa dijalankan:

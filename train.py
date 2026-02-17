@@ -1,7 +1,11 @@
 from torch.utils.data import DataLoader
 from dataclasses import dataclass
 import torch.optim as toptim
-from local_type import Model
+from local_type import (
+    Model,
+    DataLoaderLatih,
+    DataLoaderValidasi
+)
 import torch.nn as tnn
 from tqdm import tqdm
 import torch
@@ -27,8 +31,8 @@ class HasilLatih:
 
 def latih_model(
         model: Model,
-        pemuat_latih: DataLoader,
-        pemuat_validasi: DataLoader,
+        pemuat_latih: DataLoaderLatih,
+        pemuat_validasi: DataLoaderValidasi,
         simpan: bool = True,
         jumlah_epoch: int | None = None
     ) -> HasilLatih:

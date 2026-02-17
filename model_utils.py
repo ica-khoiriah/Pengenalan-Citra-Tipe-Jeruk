@@ -8,6 +8,7 @@ from utils import (
     pembuat_nama_model,
     pembuat_file,
 )
+from torch.utils.data import DataLoader
 from local_const import (
     PerangkatTrainingModel,
     FOLDER_TRAINING,
@@ -53,6 +54,20 @@ def muat_dataset() -> Tuple[DataLoaderLatih, DataLoaderValidasi]:
     )
 
     return pemuat_data_latih, pemuat_data_validasi
+
+def muat_data(folder_path: Path) -> DataLoader:
+    kumpulan_data = datasets.ImageFolder(
+        root=folder_path,
+        transform=ModelTransform.transform_validasi
+    )
+
+    pemuat_data = DataLoader(
+        kumpulan_data,
+        batch_size=2,
+        shuffle=False,
+    )
+
+    return pemuat_data
 
 def simpan_model(
         model: Model,

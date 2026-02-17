@@ -1,5 +1,6 @@
 from datetime import datetime
 from pathlib import Path
+from local_type import KontenFolder
 
 def pembuat_file(nama_file: str, ekstensi: str) -> Path:
     return Path(f"{nama_file}.{ekstensi}")
@@ -19,3 +20,6 @@ def ambil_file_terbaru(path_folder: Path) -> Path | None:
 
     latest_file = max(files, key=lambda f: f.stat().st_mtime)
     return latest_file
+
+def ambil_file(path_folder: Path) -> KontenFolder:
+    return (konten for konten in path_folder.iterdir() if konten.is_file())
