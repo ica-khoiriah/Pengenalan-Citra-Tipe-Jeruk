@@ -155,7 +155,7 @@ if __name__ == "__main__":
                 hasil_predik = prediksi_banyak(
                     model=model,
                     pemuat_data=data,
-                    nama_prediksi=path.stem
+                    nama_prediksi=f"{path_model.stem}_dengan_Data_{path.stem.title()}"
                 )
 
                 hasil_konfusi_matriks = kalkulasi_konfusi_matrix(

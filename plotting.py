@@ -101,7 +101,7 @@ def tampilkan_plot_akur_loss_data(
     fig.canvas.manager.set_window_title("Plottingan Loss dan Akur")
 
     if simpan is not None:
-        simpan_figur(fig, f"AkurLoss_Data{simpan.stem if isinstance(simpan, Path) else simpan}")
+        simpan_figur(fig, f"AkurLoss_{simpan.stem if isinstance(simpan, Path) else simpan}")
 
     plt.tight_layout()
 

@@ -84,7 +84,8 @@ def prediksi_banyak(
                 prediksi=semua_prediksi,
                 label=semua_label
             )
-        )
+        ),
+        nama_prediksi=nama_prediksi
     )
 
     return hasil_predik
